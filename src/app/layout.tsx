@@ -17,16 +17,16 @@ export const metadata: Metadata = {
   title: "Dr. Mukta Tyagi - Vedic Astrologer",
   description: "A Vedic astrologer with 25 years of experience, specializing in career, vastu, relationships, health, business, and legal matters",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/Favicon.png",
+    shortcut: "/Favicon.png",
+    apple: "/Favicon.png",
   },
   openGraph: {
     title: "Dr. Mukta Tyagi - Vedic Astrologer",
     description: "A Vedic astrologer with 25 years of experience, specializing in career, vastu, relationships, health, business, and legal matters",
     images: [
       {
-        url: "/favicon.png",
+        url: "/Favicon.png",
         width: 512,
         height: 512,
         alt: "Dr. Mukta Tyagi - Vedic Astrologer",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Dr. Mukta Tyagi - Vedic Astrologer",
     description: "A Vedic astrologer with 25 years of experience, specializing in career, vastu, relationships, health, business, and legal matters",
-    images: ["/favicon.png"],
+    images: ["/Favicon.png"],
   },
 };
 
