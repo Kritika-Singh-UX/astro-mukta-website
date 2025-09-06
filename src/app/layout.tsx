@@ -15,7 +15,12 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Dr. Mukta Tyagi - Vedic Astrologer",
-  description: "A Vedic astrologer with 25 years of experience, specializing in career, relationships, health, business, and legal matters",
+  description: "A Vedic astrologer with 25 years of experience, specializing in career, vastu, relationships, health, business, and legal matters",
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

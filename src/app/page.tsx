@@ -1,9 +1,10 @@
 "use client";
 
 import ProfileImage from '../components/ProfileImage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -36,7 +37,7 @@ export default function Home() {
               <img 
                 src="/logo.png" 
                 alt="Dr. Mukta Tyagi" 
-                className="h-8 sm:h-10 w-auto"
+                className="h-6 sm:h-10 w-auto"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const fallback = e.currentTarget.nextElementSibling as HTMLElement;
@@ -60,65 +61,57 @@ export default function Home() {
                 href="https://wa.me/917042385243" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="px-6 lg:px-8 py-2.5 lg:py-3 text-base font-medium transition-colors duration-200 rounded-full"
-                style={{backgroundColor: 'var(--primary)', color: 'var(--on-primary)'}}
-                onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = 'var(--hover)'}
-                onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = 'var(--primary)'}
+                className="btn-primary btn-ripple px-6 lg:px-8 py-2.5 lg:py-3 text-base font-medium"
               >
                 Book Consultation
               </a>
             </div>
             
-            {/* Mobile CTA Button */}
-            <div className="lg:hidden">
+            {/* Mobile Navigation */}
+            <div className="lg:hidden flex items-center">
               <a 
                 href="https://wa.me/917042385243" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base font-medium transition-colors duration-200 rounded-full"
-                style={{backgroundColor: 'var(--primary)', color: 'var(--on-primary)'}}
-                onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = 'var(--hover)'}
-                onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = 'var(--primary)'}
+                className="btn-primary btn-ripple btn-navbar inline-flex items-center justify-center text-sm font-medium"
               >
-                Book Now
+                Book Consultation
               </a>
             </div>
           </div>
         </div>
+        
       </nav>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-start sm:items-center justify-center px-4 sm:px-6 lg:px-8 pt-4 pb-8 sm:py-16 lg:py-24" style={{backgroundColor: 'var(--background)'}}>
+      <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 xl:px-[120px] pt-20 pb-24 sm:pb-20 lg:pb-32" style={{backgroundColor: 'var(--background)'}}>
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-24 items-center">
             {/* Content Column */}
             <div className="text-center lg:text-left order-2 lg:order-1">
-              <div className="inline-flex items-center px-3 sm:px-5 py-2 sm:py-3 text-sm font-medium tracking-wider uppercase mb-4 sm:mb-6 lg:mb-8 rounded-full" style={{backgroundColor: 'var(--secondary-light)', color: 'var(--on-secondary)'}}>
+              <div className="inline-flex items-center px-3 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm font-medium tracking-wider uppercase mb-4 sm:mb-6 lg:mb-8 rounded-full" style={{backgroundColor: 'var(--secondary-light)', color: 'var(--on-secondary)'}}>
                 25+ Years Experience
               </div>
               
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 sm:mb-6 lg:mb-8 leading-tight" style={{color: 'var(--foreground)'}}>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4 lg:mb-6 lg:mb-8 leading-tight" style={{color: 'var(--foreground)'}}>
                 Dr. <span className="font-medium" style={{color: 'var(--foreground)'}}>Mukta</span>{' '}
                 Tyagi
               </h1>
               
-              <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 lg:mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal" style={{color: 'var(--on-secondary)'}}>
-                I am Dr. Mukta Tyagi, a Vedic astrologer with 25 years of experience, specializing in career, vastu, relationships, health, business, and legal matters. My guidance empowers individuals in India and abroad with clarity, strength, and direction.
+              <p className="text-sm sm:text-base lg:text-lg xl:text-xl mb-4 sm:mb-6 lg:mb-8 xl:mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal" style={{color: 'var(--on-secondary)'}}>
+                I am a Vedic astrologer with 25 years of experience, specializing in career, vastu, relationships, health, business, and legal matters. My guidance empowers individuals in India and abroad with clarity, strength, and direction.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center lg:justify-start mb-8 sm:mb-12 lg:mb-16">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center lg:justify-start mb-6 sm:mb-8 lg:mb-12">
                 <a
                   href="https://wa.me/917042385243"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base font-medium transition-colors duration-200 rounded-full"
-                  style={{backgroundColor: 'var(--primary)', color: 'var(--on-primary)'}}
-                  onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = 'var(--hover)'}
-                  onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = 'var(--primary)'}
+                  className="btn-primary btn-ripple inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base font-medium"
                 >
                   Schedule Consultation
                 </a>
-                <a href="#about" className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 border text-base font-medium transition-colors duration-200 rounded-full" style={{borderColor: 'var(--border)', color: 'var(--on-secondary)', backgroundColor: 'transparent'}} onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = 'var(--surface)'} onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = 'transparent'}>
+                <a href="#about" className="btn-secondary btn-ripple inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base font-medium">
                   Learn More
                 </a>
               </div>
@@ -126,16 +119,16 @@ export default function Home() {
               {/* Trust Indicators */}
               <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-xs sm:max-w-sm mx-auto lg:mx-0">
                 <div className="text-center lg:text-left">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-semibold mb-1" style={{color: 'var(--primary)'}}>5000+</div>
-                  <div className="text-sm uppercase tracking-wider" style={{color: 'var(--on-secondary)'}}>Clients</div>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1" style={{color: 'var(--primary)'}}>5000+</div>
+                  <div className="text-sm sm:text-base uppercase tracking-wider font-medium" style={{color: 'var(--on-secondary)'}}>Clients</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-semibold mb-1" style={{color: 'var(--primary)'}}>25+</div>
-                  <div className="text-sm uppercase tracking-wider" style={{color: 'var(--on-secondary)'}}>Years</div>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1" style={{color: 'var(--primary)'}}>25+</div>
+                  <div className="text-sm sm:text-base uppercase tracking-wider font-medium" style={{color: 'var(--on-secondary)'}}>Years</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-semibold mb-1" style={{color: 'var(--primary)'}}>12h</div>
-                  <div className="text-sm uppercase tracking-wider" style={{color: 'var(--on-secondary)'}}>Daily</div>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1" style={{color: 'var(--primary)'}}>12h</div>
+                  <div className="text-sm sm:text-base uppercase tracking-wider font-medium" style={{color: 'var(--on-secondary)'}}>Daily</div>
                 </div>
               </div>
             </div>
@@ -359,7 +352,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
             {[
               { 
                 name: "Career Guidance", 
@@ -394,22 +387,22 @@ export default function Home() {
             ].map((service, index) => (
               <div 
                 key={index} 
-                className={`p-6 sm:p-8 hover:shadow-md transition-shadow duration-200 group cursor-pointer glass-card rounded-xl scroll-animate fade-scale stagger-${Math.min(index + 1, 6)}`}
+                className={`p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow duration-200 group cursor-pointer glass-card rounded-xl scroll-animate fade-scale stagger-${Math.min(index + 1, 6)}`}
               >
-                <div className="flex items-center mb-4 sm:mb-6">
+                <div className="flex items-center mb-3 sm:mb-4 lg:mb-6">
                   <img 
                     src={service.icon}
                     alt={service.name}
-                    className="w-8 h-8 sm:w-12 sm:h-12 mr-3 sm:mr-4"
+                    className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 mr-2 sm:mr-3 lg:mr-4"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
                     }}
                   />
-                  <h3 className="text-xl sm:text-2xl font-semibold" style={{color: 'var(--primary)'}}>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold" style={{color: 'var(--primary)'}}>
                     {service.name}
                   </h3>
                 </div>
-                <p className="leading-relaxed text-base font-normal" style={{color: 'var(--on-secondary)'}}>
+                <p className="leading-relaxed text-sm sm:text-base font-normal" style={{color: 'var(--on-secondary)'}}>
                   {service.description}
                 </p>
               </div>

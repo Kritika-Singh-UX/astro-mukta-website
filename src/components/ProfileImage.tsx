@@ -12,7 +12,7 @@ export default function ProfileImage({ src, alt, name, title }: ProfileImageProp
       <div className="absolute -inset-2 bg-gradient-to-br from-purple-100/20 to-purple-200/10 rounded-2xl blur-sm opacity-60"></div>
       
       {/* Main image container */}
-      <div className="relative w-96 h-96 sm:w-[28rem] sm:h-[28rem] lg:w-96 lg:h-96 xl:w-[28rem] xl:h-[28rem] rounded-2xl overflow-hidden border-2 glass-card shadow-lg transition-transform duration-300 group-hover:scale-105" style={{borderColor: 'var(--primary)', backgroundColor: 'var(--surface)'}}>
+      <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-80 lg:h-80 xl:w-96 xl:h-96 rounded-2xl overflow-hidden border-2 glass-card shadow-lg transition-transform duration-300 group-hover:scale-105" style={{borderColor: 'var(--primary)', backgroundColor: 'var(--surface)'}}>
         <img
           src={src}
           alt={alt}
