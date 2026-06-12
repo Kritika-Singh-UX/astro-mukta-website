@@ -1,335 +1,402 @@
 "use client";
 
+import Image from 'next/image';
 import ProfileImage from '../components/ProfileImage';
 import { useEffect, useState } from 'react';
 
+const NAV_LINKS = [
+  { label: 'About', href: '#about' },
+  { label: 'Services', href: '#services' },
+  { label: 'Testimonials', href: '#testimonials' },
+];
+
+const MARQUEE_ITEMS = [
+  'Career Guidance',
+  'Marriage & Relationships',
+  'Vaastu Consultation',
+  'Janam Kundali',
+  'Child Development',
+  'Health & Wellness',
+];
+
+/* Thin-stroke line icons, one per service */
+const serviceIcons: Record<string, React.ReactNode> = {
+  career: (
+    <>
+      <path d="M3.5 18.5l5-8.5 4.5 4 5.5-9" />
+      <path d="M18 3v5M15.5 5.5h5" />
+    </>
+  ),
+  relationships: (
+    <>
+      <circle cx="8.5" cy="12" r="5.5" />
+      <circle cx="15.5" cy="12" r="5.5" />
+    </>
+  ),
+  vaastu: (
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" />
+      <path d="M3.5 3.5l17 17M20.5 3.5l-17 17" />
+      <circle cx="12" cy="12" r="1.6" />
+    </>
+  ),
+  child: (
+    <>
+      <path d="M12 21v-8" />
+      <path d="M12 13C12 8.5 9 6 4.5 6c0 4.5 3 7 7.5 7z" />
+      <path d="M12 13c0-4.5 3-7 7.5-7 0 4.5-3 7-7.5 7z" />
+    </>
+  ),
+  kundali: (
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" />
+      <path d="M3.5 3.5l17 17M20.5 3.5l-17 17" />
+      <path d="M12 3.5l8.5 8.5L12 20.5 3.5 12z" />
+    </>
+  ),
+  health: (
+    <>
+      <path d="M12 4.5c-2 2.6-2 6.4 0 9 2-2.6 2-6.4 0-9z" />
+      <path d="M4.5 8.5c.4 5.2 3.3 8.5 7.5 8.5s7.1-3.3 7.5-8.5" />
+      <path d="M12 17v3" />
+    </>
+  ),
+};
+
+const SERVICES = [
+  {
+    name: 'Career Guidance',
+    icon: 'career',
+    description:
+      'Navigate professional crossroads with confidence. Optimal timing for job changes, ventures, and transitions, guided by your chart.',
+  },
+  {
+    name: 'Marriage & Relationships',
+    icon: 'relationships',
+    description:
+      'Compatibility analysis for marriage, partnership, and family. Understand planetary influences on love and find the right timing.',
+  },
+  {
+    name: 'Vaastu Consultation',
+    icon: 'vaastu',
+    description:
+      'Harmonise your living and working spaces through ancient architectural principles, with practical remedies and no demolition required.',
+  },
+  {
+    name: 'Child Development',
+    icon: 'child',
+    description:
+      "Unlock your child's potential through birth chart analysis, from learning style and natural talents to the right educational path.",
+  },
+  {
+    name: 'Janam Kundali',
+    icon: 'kundali',
+    description:
+      'A complete life map: personality, strengths, karmic patterns, and major dasha periods, read through classical Vedic calculation.',
+  },
+  {
+    name: 'Health & Wellness',
+    icon: 'health',
+    description:
+      'Preventive insight into well-being: vulnerable periods, beneficial routines, and remedies aligned with your planetary cycles.',
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    name: 'Kritika Chauhan',
+    location: 'Mainpuri',
+    review:
+      "Dr. Mukta's guidance has been invaluable for my career decisions. Her insights are remarkably accurate.",
+  },
+  {
+    name: 'Dr. Tulsi Raman',
+    location: 'Shimla',
+    review:
+      'Exceptional knowledge and experience. The health insights provided were precisely what I needed.',
+  },
+  {
+    name: 'Mansi Dwivedi',
+    location: 'Bengaluru',
+    review:
+      'Her guidance helped me navigate difficult relationship decisions with clarity and confidence.',
+  },
+];
+
+const WHATSAPP_URL = 'https://wa.me/917042385243';
+
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
-        }
-      });
-    }, observerOptions);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
 
     const animateElements = document.querySelectorAll('.scroll-animate');
     animateElements.forEach((el) => observer.observe(el));
 
-    return () => {
-      animateElements.forEach((el) => observer.unobserve(el));
-    };
+    return () => observer.disconnect();
   }, []);
+
   return (
-    <div className="min-h-screen font-inter" style={{background: 'var(--background)'}}>
-      {/* Navigation Bar */}
-      <nav className="glass-card border-b sticky top-0 z-50" style={{borderColor: 'var(--border)'}}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen">
+      {/* ---------------------------------------------------------- */}
+      {/* Navigation                                                  */}
+      {/* ---------------------------------------------------------- */}
+      <nav className="nav-blur fixed top-0 inset-x-0 z-50">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
-            {/* Logo */}
-            <div className="flex items-center">
-              <img 
-                src="/logo.png" 
-                alt="Dr. Mukta Tyagi" 
-                className="h-6 sm:h-10 w-auto"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                  if (fallback) fallback.style.display = 'block';
-                }}
-              />
-              <div className="text-lg sm:text-xl font-medium tracking-tight hidden" style={{color: 'var(--primary)'}}>
-                Dr. Mukta Tyagi
-              </div>
-            </div>
-            
-            {/* Navigation Links - Desktop */}
-            <div className="hidden lg:flex items-center gap-8 xl:gap-12">
-              <a href="#about" className="text-base font-medium transition-colors duration-200" style={{color: 'var(--on-secondary)'}} onMouseEnter={(e) => (e.target as HTMLElement).style.color = 'var(--primary)'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'var(--on-secondary)'}>
-                About
-              </a>
-              <a href="#services" className="text-base font-medium transition-colors duration-200" style={{color: 'var(--on-secondary)'}} onMouseEnter={(e) => (e.target as HTMLElement).style.color = 'var(--primary)'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'var(--on-secondary)'}>
-                Services
-              </a>
-              <a 
-                href="https://wa.me/917042385243" 
-                target="_blank" 
+            <a href="#" className="flex items-baseline gap-0.5 select-none">
+              <span className="font-display text-xl sm:text-2xl tracking-wide text-ink">Astro</span>
+              <span className="font-display text-xl sm:text-2xl tracking-wide italic gold-gradient-text">Mukta</span>
+            </a>
+
+            <div className="hidden lg:flex items-center gap-10">
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm tracking-widest uppercase text-soft hover:text-ink transition-colors duration-300"
+                >
+                  {link.label}
+                </a>
+              ))}
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary btn-ripple px-6 lg:px-8 py-2.5 lg:py-3 text-base font-medium"
+                className="btn-primary px-7 py-2.5 text-sm"
               >
                 Book Consultation
               </a>
             </div>
-            
-            {/* Mobile Navigation */}
-            <div className="lg:hidden flex items-center">
-              <a 
-                href="https://wa.me/917042385243" 
-                target="_blank" 
+
+            <div className="lg:hidden flex items-center gap-2">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary btn-ripple btn-navbar inline-flex items-center justify-center text-sm font-medium"
+                className="btn-primary px-4 py-2 text-sm"
               >
-                Book Consultation
+                Book Now
               </a>
+              <button
+                type="button"
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((open) => !open)}
+                className="flex flex-col items-center justify-center w-11 h-11 gap-[5px]"
+              >
+                <span
+                  className={`block h-px w-5 transition-transform duration-300 ${menuOpen ? 'rotate-45 translate-y-[6px]' : ''}`}
+                  style={{ backgroundColor: 'var(--ink)' }}
+                />
+                <span
+                  className={`block h-px w-5 transition-opacity duration-300 ${menuOpen ? 'opacity-0' : ''}`}
+                  style={{ backgroundColor: 'var(--ink)' }}
+                />
+                <span
+                  className={`block h-px w-5 transition-transform duration-300 ${menuOpen ? '-rotate-45 -translate-y-[6px]' : ''}`}
+                  style={{ backgroundColor: 'var(--ink)' }}
+                />
+              </button>
             </div>
           </div>
+
+          {/* Mobile menu */}
+          {menuOpen && (
+            <div className="lg:hidden border-t hairline-soft py-3">
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-3 text-center text-sm tracking-widest uppercase text-soft hover:text-ink transition-colors duration-300"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
-        
       </nav>
 
-      {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 xl:px-[120px] pt-20 pb-24 sm:pb-20 lg:pb-32" style={{backgroundColor: 'var(--background)'}}>
+      {/* ---------------------------------------------------------- */}
+      {/* Hero                                                        */}
+      {/* ---------------------------------------------------------- */}
+      <section className="relative min-h-screen flex items-center px-5 sm:px-8 pt-28 pb-16 lg:pt-32 overflow-hidden">
         <div className="max-w-7xl mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-24 items-center">
-            {/* Content Column */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-10 items-center">
+            {/* Copy */}
             <div className="text-center lg:text-left order-2 lg:order-1">
-              <div className="inline-flex items-center px-3 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm font-medium tracking-wider uppercase mb-4 sm:mb-6 lg:mb-8 rounded-full" style={{backgroundColor: 'var(--secondary-light)', color: 'var(--on-secondary)'}}>
-                25+ Years Experience
-              </div>
-              
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4 lg:mb-6 lg:mb-8 leading-tight" style={{color: 'var(--foreground)'}}>
-                Dr. <span className="font-medium" style={{color: 'var(--foreground)'}}>Mukta</span>{' '}
-                Tyagi
-              </h1>
-              
-              <p className="text-sm sm:text-base lg:text-lg xl:text-xl mb-4 sm:mb-6 lg:mb-8 xl:mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal" style={{color: 'var(--on-secondary)'}}>
-                I am a Vedic astrologer with 25 years of experience, specializing in career, vastu, relationships, health, business, and legal matters. My guidance empowers individuals in India and abroad with clarity, strength, and direction.
+              <p className="eyebrow mb-6 scroll-animate fade-up">
+                Dr. Mukta Tyagi · Vedic Astrologer
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center lg:justify-start mb-6 sm:mb-8 lg:mb-12">
+
+              <h1 className="font-display text-[clamp(2.25rem,11vw,2.75rem)] sm:text-6xl lg:text-6xl xl:text-7xl leading-[1.08] text-ink mb-7 scroll-animate fade-up stagger-1">
+                Clarity, written
+                <br />
+                in the <em>stars</em>.
+              </h1>
+
+              <p className="text-base sm:text-lg leading-relaxed text-soft max-w-xl mx-auto lg:mx-0 mb-10 scroll-animate fade-up stagger-2">
+                Twenty-five years of Vedic astrology practice, guiding individuals
+                across India and abroad through career, relationships, vaastu,
+                health, and life&rsquo;s defining decisions.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-14 scroll-animate fade-up stagger-3">
                 <a
-                  href="https://wa.me/917042385243"
+                  href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary btn-ripple inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base font-medium"
+                  className="btn-primary px-9 py-4 text-base"
                 >
-                  Schedule Consultation
+                  Book a Consultation
                 </a>
-                <a href="#about" className="btn-secondary btn-ripple inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base font-medium">
-                  Learn More
+                <a href="#services" className="btn-ghost px-9 py-4 text-base">
+                  Explore Services
                 </a>
               </div>
 
-              {/* Trust Indicators */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-xs sm:max-w-sm mx-auto lg:mx-0">
-                <div className="text-center lg:text-left">
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1" style={{color: 'var(--primary)'}}>5000+</div>
-                  <div className="text-sm sm:text-base uppercase tracking-wider font-medium" style={{color: 'var(--on-secondary)'}}>Clients</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1" style={{color: 'var(--primary)'}}>25+</div>
-                  <div className="text-sm sm:text-base uppercase tracking-wider font-medium" style={{color: 'var(--on-secondary)'}}>Years</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1" style={{color: 'var(--primary)'}}>12h</div>
-                  <div className="text-sm sm:text-base uppercase tracking-wider font-medium" style={{color: 'var(--on-secondary)'}}>Daily</div>
-                </div>
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-3 sm:flex sm:justify-center lg:justify-start sm:gap-14 scroll-animate fade-up stagger-4">
+                {[
+                  { value: '5000+', label: 'Consultations' },
+                  { value: '25+', label: 'Years of Practice' },
+                  { value: '12h', label: 'Available Daily' },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center lg:text-left lg:border-l lg:pl-5 hairline-soft lg:border-solid">
+                    <div className="font-display text-2xl sm:text-4xl gold-gradient-text mb-1">
+                      {stat.value}
+                    </div>
+                    <div className="text-[0.55rem] sm:text-[0.7rem] uppercase tracking-[0.12em] sm:tracking-[0.2em] text-faint">
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Image Column */}
+            {/* Portrait with orbiting planets */}
             <div className="flex justify-center lg:justify-end order-1 lg:order-2">
-              <div className="relative w-80 h-80 sm:w-96 sm:h-96 lg:w-[28rem] lg:h-[28rem] xl:w-[36rem] xl:h-[36rem] solar-system-container">
-                
-                {/* Main Image - Base layer - Centered and bigger on mobile */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full overflow-hidden z-10 border-2" style={{backgroundColor: 'var(--surface)', borderColor: 'var(--border)'}}>
-                  <img
+              <div className="solar-system relative w-[17rem] h-[17rem] sm:w-[26rem] sm:h-[26rem] lg:w-[28rem] lg:h-[28rem] xl:w-[32rem] xl:h-[32rem]">
+                {/* Ambient glow */}
+                <div
+                  className="absolute -inset-10 rounded-full blur-3xl"
+                  style={{ background: 'radial-gradient(closest-side, rgba(122,92,160,0.22), rgba(82,52,120,0.12), transparent)' }}
+                />
+
+                {/* Orbital rings */}
+                <div className="absolute inset-0 rounded-full border" style={{ borderColor: 'rgba(242,236,223,0.12)' }} />
+                <div className="absolute inset-[7%] rounded-full border border-dashed" style={{ borderColor: 'rgba(242,236,223,0.08)' }} />
+                <div className="absolute inset-[14%] rounded-full border" style={{ borderColor: 'rgba(182,170,198,0.1)' }} />
+
+                {/* Portrait */}
+                <div
+                  className="absolute inset-12 sm:inset-16 rounded-full overflow-hidden"
+                  style={{
+                    background: 'radial-gradient(circle at 50% 30%, #3a2752 0%, #1d1430 55%, #120c1e 100%)',
+                    boxShadow: 'inset 0 0 0 1px rgba(242,236,223,0.22), 0 30px 70px -20px rgba(0,0,0,0.7)',
+                  }}
+                >
+                  <Image
                     src="/Mukta Tyagi New Image.png"
                     alt="Dr. Mukta Tyagi"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23f3f4f6'/%3E%3Ctext x='50' y='50' font-family='system-ui' font-size='14' fill='%236b7280' text-anchor='middle' dy='.3em'%3EDr. Mukta Tyagi%3C/text%3E%3C/svg%3E";
-                    }}
+                    fill
+                    priority
+                    sizes="(min-width: 1280px) 512px, (min-width: 640px) 416px, 272px"
+                    className="object-cover object-top"
                   />
                 </div>
-                
-                {/* Solar System Orbital Rings */}
-                <div className="absolute inset-6 sm:inset-6 border rounded-full opacity-15 z-20" style={{borderColor: 'var(--secondary)'}}></div>
-                <div className="absolute inset-4 sm:inset-4 border rounded-full opacity-10 z-20" style={{borderColor: 'var(--secondary-dark)'}}></div>
-                <div className="absolute inset-3 sm:inset-2 border rounded-full opacity-8 z-20" style={{borderColor: 'var(--accent)'}}></div>
-                
-                {/* Solar System Planets */}
-                <div className="absolute inset-0 pointer-events-none z-30">
-                  {/* Mercury - Closest, fastest orbit */}
-                  <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 -mt-0.5 -ml-0.5 sm:-mt-1 sm:-ml-1 planet-mercury">
-                    <div className="w-full h-full rounded-full opacity-70" style={{backgroundColor: 'var(--disabled)'}}></div>
-                  </div>
-                  
-                  {/* Venus - Second orbit */}
-                  <div className="absolute top-1/2 left-1/2 w-2 h-2 sm:w-2.5 sm:h-2.5 -mt-1 -ml-1 sm:-mt-1.5 sm:-ml-1.5 planet-venus">
-                    <div className="w-full h-full rounded-full opacity-80" style={{backgroundColor: 'var(--accent)'}}></div>
-                  </div>
-                  
-                  {/* Earth - Third orbit with moon */}
-                  <div className="absolute top-1/2 left-1/2 w-2.5 h-2.5 sm:w-3 sm:h-3 -mt-1.5 -ml-1.5 planet-earth">
-                    <div className="w-full h-full rounded-full opacity-90 relative" style={{backgroundColor: 'var(--primary-dark)'}}>
-                      <div className="absolute w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full -top-1.5 sm:-top-2 left-1/2 -ml-0.5 moon" style={{backgroundColor: 'var(--secondary)'}}></div>
-                    </div>
-                  </div>
-                  
-                  {/* Mars - Fourth orbit */}
-                  <div className="absolute top-1/2 left-1/2 w-2 h-2 sm:w-2.5 sm:h-2.5 -mt-1 -ml-1 sm:-mt-1.5 sm:-ml-1.5 planet-mars">
-                    <div className="w-full h-full rounded-full opacity-75" style={{backgroundColor: 'var(--hover)'}}></div>
-                  </div>
-                  
-                  {/* Jupiter - Largest planet */}
-                  <div className="absolute top-1/2 left-1/2 w-3 h-3 sm:w-4 sm:h-4 -mt-1.5 -ml-1.5 sm:-mt-2 sm:-ml-2 planet-jupiter">
-                    <div className="w-full h-full rounded-full opacity-85" style={{backgroundColor: 'var(--secondary-dark)'}}></div>
-                  </div>
-                  
-                  {/* Saturn - With rings */}
-                  <div className="absolute top-1/2 left-1/2 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 -mt-1.5 -ml-1.5 planet-saturn">
-                    <div className="w-full h-full rounded-full opacity-80 relative" style={{backgroundColor: 'var(--primary)'}}>
-                      <div className="absolute inset-0 border rounded-full opacity-40 scale-150" style={{borderColor: 'var(--secondary-light)'}}></div>
-                    </div>
-                  </div>
-                  
-                  {/* Distant stars */}
-                  <div className="absolute top-6 right-8 sm:top-8 sm:right-12 w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full opacity-50 star-twinkle" style={{backgroundColor: 'var(--secondary-light)'}}></div>
-                  <div className="absolute bottom-8 left-6 sm:bottom-10 sm:left-8 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full opacity-60 star-twinkle" style={{backgroundColor: 'var(--accent)', animationDelay: '1s'}}></div>
-                  <div className="absolute top-16 left-12 sm:top-20 sm:left-16 w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full opacity-40 star-twinkle" style={{backgroundColor: 'var(--primary-light)', animationDelay: '2s'}}></div>
-                  <div className="absolute bottom-12 right-16 sm:bottom-16 sm:right-20 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full opacity-70 star-twinkle" style={{backgroundColor: 'var(--secondary)', animationDelay: '0.5s'}}></div>
+
+                {/* Orbiting planets */}
+                <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+                  <span className="planet planet-mercury"><span className="planet-dot" /></span>
+                  <span className="planet planet-venus"><span className="planet-dot" /></span>
+                  <span className="planet planet-earth">
+                    <span className="planet-dot">
+                      <span className="moon" />
+                    </span>
+                  </span>
+                  <span className="planet planet-mars"><span className="planet-dot" /></span>
+                  <span className="planet planet-jupiter"><span className="planet-dot" /></span>
+                  <span className="planet planet-saturn"><span className="planet-dot" /></span>
                 </div>
-                
-                {/* CSS for Solar System animations */}
-                <style jsx>{`
-                  .solar-system-container {
-                    /* Mobile: 320px container, image is 288px, tight orbits */
-                    --orbit-1: 140px;
-                    --orbit-2: 150px;
-                    --orbit-3: 155px;
-                    --orbit-4: 158px;
-                    --orbit-5: 160px;
-                    --orbit-6: 160px;
-                    --moon-orbit: 18px;
-                  }
-                  
-                  @media (min-width: 640px) {
-                    .solar-system-container {
-                      /* SM: 384px container, image is 288px, more orbit space */
-                      --orbit-1: 160px;
-                      --orbit-2: 170px;
-                      --orbit-3: 180px;
-                      --orbit-4: 185px;
-                      --orbit-5: 188px;
-                      --orbit-6: 190px;
-                      --moon-orbit: 18px;
-                    }
-                  }
-                  
-                  @media (min-width: 1024px) {
-                    .solar-system-container {
-                      /* LG: 448px container, balanced orbits */
-                      --orbit-1: 180px;
-                      --orbit-2: 200px;
-                      --orbit-3: 220px;
-                      --orbit-4: 240px;
-                      --orbit-5: 260px;
-                      --orbit-6: 280px;
-                      --moon-orbit: 15px;
-                    }
-                  }
-                  
-                  @media (min-width: 1280px) {
-                    .solar-system-container {
-                      /* XL: 576px container, full space */
-                      --orbit-1: 220px;
-                      --orbit-2: 240px;
-                      --orbit-3: 260px;
-                      --orbit-4: 280px;
-                      --orbit-5: 300px;
-                      --orbit-6: 320px;
-                      --moon-orbit: 15px;
-                    }
-                  }
-                  
-                  @keyframes mercury-orbit {
-                    0% { transform: rotate(0deg) translateX(var(--orbit-1)) rotate(0deg); }
-                    100% { transform: rotate(360deg) translateX(var(--orbit-1)) rotate(-360deg); }
-                  }
-                  @keyframes venus-orbit {
-                    0% { transform: rotate(0deg) translateX(var(--orbit-2)) rotate(0deg); }
-                    100% { transform: rotate(360deg) translateX(var(--orbit-2)) rotate(-360deg); }
-                  }
-                  @keyframes earth-orbit {
-                    0% { transform: rotate(0deg) translateX(var(--orbit-3)) rotate(0deg); }
-                    100% { transform: rotate(360deg) translateX(var(--orbit-3)) rotate(-360deg); }
-                  }
-                  @keyframes mars-orbit {
-                    0% { transform: rotate(0deg) translateX(var(--orbit-4)) rotate(0deg); }
-                    100% { transform: rotate(360deg) translateX(var(--orbit-4)) rotate(-360deg); }
-                  }
-                  @keyframes jupiter-orbit {
-                    0% { transform: rotate(0deg) translateX(var(--orbit-5)) rotate(0deg); }
-                    100% { transform: rotate(360deg) translateX(var(--orbit-5)) rotate(-360deg); }
-                  }
-                  @keyframes saturn-orbit {
-                    0% { transform: rotate(0deg) translateX(var(--orbit-6)) rotate(0deg); }
-                    100% { transform: rotate(360deg) translateX(var(--orbit-6)) rotate(-360deg); }
-                  }
-                  @keyframes moon-orbit {
-                    0% { transform: rotate(0deg) translateX(var(--moon-orbit)) rotate(0deg); }
-                    100% { transform: rotate(360deg) translateX(var(--moon-orbit)) rotate(-360deg); }
-                  }
-                  @keyframes star-twinkle {
-                    0%, 100% { opacity: 0.2; transform: scale(0.8); }
-                    50% { opacity: 1; transform: scale(1.2); }
-                  }
-                  
-                  .planet-mercury { animation: mercury-orbit 8s linear infinite; }
-                  .planet-venus { animation: venus-orbit 12s linear infinite; }
-                  .planet-earth { animation: earth-orbit 16s linear infinite; }
-                  .planet-mars { animation: mars-orbit 20s linear infinite; }
-                  .planet-jupiter { animation: jupiter-orbit 28s linear infinite; }
-                  .planet-saturn { animation: saturn-orbit 36s linear infinite; }
-                  .moon { animation: moon-orbit 2s linear infinite; }
-                  .star-twinkle { animation: star-twinkle 3s ease-in-out infinite; }
-                `}</style>
+
+                {/* Accent stars */}
+                <div className="absolute top-10 right-4 w-1.5 h-1.5 rounded-full star-twinkle" style={{ backgroundColor: 'var(--gold-bright)' }} />
+                <div className="absolute bottom-16 left-2 w-1 h-1 rounded-full star-twinkle" style={{ backgroundColor: 'var(--gold)', animationDelay: '1.2s' }} />
+                <div className="absolute top-1/3 -left-3 w-1 h-1 rounded-full star-twinkle" style={{ backgroundColor: 'var(--soft)', animationDelay: '2.1s' }} />
+                <div className="absolute -bottom-2 right-1/4 w-1.5 h-1.5 rounded-full star-twinkle" style={{ backgroundColor: 'var(--gold-bright)', animationDelay: '0.6s' }} />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About Me Section */}
-      <section id="about" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24" style={{backgroundColor: 'var(--background)'}}>
-        <div className="max-w-7xl mx-auto">
+      {/* ---------------------------------------------------------- */}
+      {/* Marquee strip                                               */}
+      {/* ---------------------------------------------------------- */}
+      <div className="border-y hairline-soft py-5 marquee" aria-hidden="true">
+        <div className="marquee-track">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex items-center shrink-0">
+              {MARQUEE_ITEMS.map((item) => (
+                <span key={`${copy}-${item}`} className="flex items-center">
+                  <span className="font-display italic text-lg sm:text-xl text-soft whitespace-nowrap px-8">
+                    {item}
+                  </span>
+                  <span className="text-gold text-sm">✦</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div className="space-y-6 lg:space-y-8 scroll-animate fade-left">
-              <div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-4 lg:mb-6 text-center lg:text-left" style={{color: 'var(--primary)'}}>
-                  About Me
-                </h2>
-                <p className="text-lg lg:text-xl font-normal leading-relaxed text-center lg:text-left" style={{color: 'var(--on-secondary)'}}>
-                  My journey and training in the ancient art of Vedic Astrology.
+      {/* ---------------------------------------------------------- */}
+      {/* About                                                       */}
+      {/* ---------------------------------------------------------- */}
+      <section id="about" className="px-5 sm:px-8 py-24 sm:py-32 scroll-mt-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+            <div className="scroll-animate fade-left">
+              <p className="eyebrow mb-5">( 01 ) · The Lineage</p>
+              <h2 className="font-display text-4xl sm:text-5xl leading-tight text-ink mb-8">
+                Trained under
+                <br />
+                <em>Sh. K.N. Rao</em>
+              </h2>
+
+              <div className="space-y-6 text-soft text-base sm:text-lg leading-relaxed">
+                <p className="scroll-animate fade-up stagger-1">
+                  <span className="text-ink font-medium">Sh. K.N. Rao</span> is one of
+                  the most respected Vedic astrologers in India after independence,
+                  the man who introduced a research-based approach to astrology.
                 </p>
-              </div>
-              
-              <div className="space-y-4 lg:space-y-6">
-                <p className="text-base lg:text-lg font-normal leading-relaxed text-left scroll-animate fade-up stagger-1" style={{color: 'var(--on-secondary)'}}>
-                  <span className="font-semibold">Sh. K.N. Rao</span> is one of the most respected Vedic astrologers in India after independence. He introduced a research-based approach to astrology.
+                <p className="scroll-animate fade-up stagger-2">
+                  I have known Rao Sahab since 2000 and have learned both the
+                  foundations and the finer details of astrology from him.
                 </p>
-                
-                <p className="text-base lg:text-lg font-normal leading-relaxed text-left scroll-animate fade-up stagger-2" style={{color: 'var(--on-secondary)'}}>
-                  I have known Rao Sahab since 2000 and have learned both the basics and the finer details of astrology from him.
-                </p>
-                
-                <p className="text-base lg:text-lg font-normal leading-relaxed text-left scroll-animate fade-up stagger-3" style={{color: 'var(--on-secondary)'}}>
-                  To me, he has always been more than a teacher. He has been my guru.
-                </p>
+                <blockquote className="scroll-animate fade-up stagger-3 border-l-2 pl-6 hairline font-display italic text-xl sm:text-2xl text-ink">
+                  To me, he has always been more than a teacher.
+                  He has been my guru.
+                </blockquote>
               </div>
             </div>
-            
-            {/* Image Column - Right */}
+
             <div className="flex justify-center lg:justify-end scroll-animate fade-right">
-              <ProfileImage 
+              <ProfileImage
                 src="/Rao Sahab Image.jpeg"
                 alt="Sh. K.N. Rao - Renowned Vedic Astrologer"
                 name="Sh. K.N. Rao"
@@ -340,69 +407,48 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24" style={{backgroundColor: 'var(--surface)'}}>
+      {/* ---------------------------------------------------------- */}
+      {/* Services                                                    */}
+      {/* ---------------------------------------------------------- */}
+      <section id="services" className="px-5 sm:px-8 py-24 sm:py-32 scroll-mt-20" style={{ backgroundColor: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-2xl mb-12 sm:mb-14 lg:mb-16 text-center lg:text-left scroll-animate fade-up">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-6 lg:mb-8" style={{color: 'var(--primary)'}}>
-              Services
+          <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left mb-16 scroll-animate fade-up">
+            <p className="eyebrow mb-5">( 02 ) · Offerings</p>
+            <h2 className="font-display text-4xl sm:text-5xl leading-tight text-ink mb-6">
+              Guidance for <em>every chapter</em>
             </h2>
-            <p className="text-lg sm:text-xl font-normal leading-relaxed" style={{color: 'var(--on-secondary)'}}>
-              Comprehensive astrological consultations tailored to your unique journey.
+            <p className="text-soft text-lg leading-relaxed">
+              Consultations rooted in classical Vedic methods, tailored to the
+              question in front of you.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-            {[
-              { 
-                name: "Career Guidance", 
-                icon: "/Career Guidance.png",
-                description: "Navigate professional crossroads with confidence through detailed astrological analysis. Discover optimal timing for job changes, business ventures, and career transitions. Understand your natural talents and how planetary positions influence your professional path and success potential."
-              },
-              { 
-                name: "Relationships", 
-                icon: "/Marriage and Relationship.png",
-                description: "Comprehensive compatibility analysis for marriages, partnerships, and family relationships. Examine planetary influences on love, communication patterns, and emotional bonds. Receive guidance on timing for engagements, resolving conflicts, and strengthening existing relationships through Vedic wisdom."
-              },
-              { 
-                name: "Vaastu", 
-                icon: "/Vaastu Consultation.png",
-                description: "Transform your living and working spaces through ancient architectural principles. Identify energy blockages and receive practical solutions for optimal room layouts, entrance positioning, and color schemes. Create harmonious environments that support health, prosperity, and positive relationships."
-              },
-              { 
-                name: "Child Development", 
-                icon: "/Child Development Guidance.png",
-                description: "Unlock your child's potential through birth chart analysis and educational guidance. Understand their learning style, natural talents, and optimal study periods. Receive insights on subject selection, career paths, and parenting approaches aligned with their astrological blueprint for holistic development."
-              },
-              { 
-                name: "Birth Chart", 
-                icon: "/Janam Kundali Analysis.png",
-                description: "Comprehensive life map revealing your personality, strengths, challenges, and karmic patterns. Detailed analysis of planetary positions at birth, major life periods (dashas), and upcoming opportunities. Understand your life purpose, relationships, and spiritual journey through ancient Vedic calculations."
-              },
-              { 
-                name: "Health", 
-                icon: "/Health and Wellness.png",
-                description: "Preventive health insights through astrological indicators and planetary influences on physical well-being. Receive guidance on beneficial dietary choices, exercise timing, and natural remedies. Understand vulnerable periods and strengthen immunity through gemstone recommendations and lifestyle adjustments."
-              }
-            ].map((service, index) => (
-              <div 
-                key={index} 
-                className={`p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow duration-200 group cursor-pointer glass-card rounded-xl scroll-animate fade-scale stagger-${Math.min(index + 1, 6)}`}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+            {SERVICES.map((service, index) => (
+              <div
+                key={service.name}
+                className={`card group relative rounded-2xl p-8 overflow-hidden scroll-animate fade-scale stagger-${Math.min(index + 1, 6)}`}
               >
-                <div className="flex items-center mb-3 sm:mb-4 lg:mb-6">
-                  <img 
-                    src={service.icon}
-                    alt={service.name}
-                    className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 mr-2 sm:mr-3 lg:mr-4"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold" style={{color: 'var(--primary)'}}>
-                    {service.name}
-                  </h3>
-                </div>
-                <p className="leading-relaxed text-sm sm:text-base font-normal" style={{color: 'var(--on-secondary)'}}>
+                <div className="card-glow" />
+                <span className="absolute top-7 right-8 font-display italic text-2xl text-gold select-none">
+                  0{index + 1}
+                </span>
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-10 h-10 text-gold mb-7"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  {serviceIcons[service.icon]}
+                </svg>
+                <h3 className="font-display text-2xl text-ink mb-3">
+                  {service.name}
+                </h3>
+                <p className="text-soft text-[0.95rem] leading-relaxed">
                   {service.description}
                 </p>
               </div>
@@ -411,99 +457,145 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24" style={{backgroundColor: 'var(--background)'}}>
+      {/* ---------------------------------------------------------- */}
+      {/* Testimonials                                                */}
+      {/* ---------------------------------------------------------- */}
+      <section id="testimonials" className="px-5 sm:px-8 py-24 sm:py-32 scroll-mt-20">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-2xl mb-12 sm:mb-14 lg:mb-16 text-center lg:text-left scroll-animate fade-up">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-6 lg:mb-8" style={{color: 'var(--primary)'}}>
-              Testimonials
+          <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left mb-16 scroll-animate fade-up">
+            <p className="eyebrow mb-5">( 03 ) · Kind Words</p>
+            <h2 className="font-display text-4xl sm:text-5xl leading-tight text-ink mb-6">
+              Trusted across <em>two decades</em>
             </h2>
-            <p className="text-lg sm:text-xl font-normal leading-relaxed" style={{color: 'var(--on-secondary)'}}>
-              Trusted by hundreds of clients over two decades of practice.
-            </p>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              { 
-                name: "Kritika Chauhan", 
-                location: "Mainpuri", 
-                review: "Dr. Mukta's guidance has been invaluable for my career decisions. Her insights are remarkably accurate."
-              },
-              { 
-                name: "Dr. Tulsi Raman", 
-                location: "Shimla", 
-                review: "Exceptional knowledge and experience. The health insights provided were precisely what I needed."
-              },
-              { 
-                name: "Mansi Dwivedi", 
-                location: "Bengaluru", 
-                review: "Her guidance helped me navigate difficult relationship decisions with clarity and confidence."
-              }
-            ].map((testimonial, index) => (
-              <div key={index} className={`border-l-2 sm:border-l-4 pl-4 sm:pl-6 lg:pl-8 scroll-animate fade-up stagger-${Math.min(index + 1, 6)}`} style={{borderColor: 'var(--secondary)'}}>
-                <blockquote className="leading-relaxed mb-4 sm:mb-6 text-base sm:text-lg font-normal" style={{color: 'var(--foreground)'}}>
-                  &ldquo;<span style={{color: 'var(--on-secondary)'}}>{testimonial.review}</span>&rdquo;
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((testimonial, index) => (
+              <figure
+                key={testimonial.name}
+                className={`card relative rounded-2xl p-8 pt-14 scroll-animate fade-up stagger-${Math.min(index + 1, 6)}`}
+              >
+                <div className="card-glow" />
+                <span
+                  className="absolute top-3 left-7 font-display text-7xl leading-none text-faint opacity-40 select-none"
+                  aria-hidden="true"
+                >
+                  &ldquo;
+                </span>
+                <blockquote className="font-display italic text-xl leading-relaxed text-ink mb-8">
+                  {testimonial.review}
                 </blockquote>
-                <div>
-                  <div className="font-medium text-base" style={{color: 'var(--primary)'}}>
-                    {testimonial.name}
-                  </div>
-                  <div className="text-sm mt-1 uppercase tracking-wider" style={{color: 'var(--disabled)'}}>
-                    {testimonial.location}
-                  </div>
-                </div>
-              </div>
+                <figcaption className="flex items-center gap-4">
+                  <span className="h-px w-8" style={{ backgroundColor: 'var(--faint)' }} />
+                  <span>
+                    <span className="block text-sm font-medium text-ink">
+                      {testimonial.name}
+                    </span>
+                    <span className="block text-[0.7rem] uppercase tracking-[0.2em] text-faint mt-1">
+                      {testimonial.location}
+                    </span>
+                  </span>
+                </figcaption>
+              </figure>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="px-4 sm:px-6 lg:px-8 py-12 sm:py-14 lg:py-16" style={{backgroundColor: 'var(--primary-dark)'}}>
+      {/* ---------------------------------------------------------- */}
+      {/* Call to action                                              */}
+      {/* ---------------------------------------------------------- */}
+      <section className="relative px-5 sm:px-8 py-28 sm:py-36 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 60% 70% at 50% 100%, rgba(122,92,160,0.16), transparent 70%)' }}
+        />
+        <div className="max-w-3xl mx-auto text-center relative">
+          <p className="eyebrow mb-6 scroll-animate fade-up">Begin Your Journey</p>
+          <h2 className="font-display text-4xl sm:text-6xl leading-[1.12] text-ink mb-8 scroll-animate fade-up stagger-1">
+            Your chart already holds
+            <br />
+            <em>the answers.</em>
+          </h2>
+          <p className="text-soft text-lg leading-relaxed mb-12 max-w-xl mx-auto scroll-animate fade-up stagger-2">
+            Consultations are available daily, in person and over WhatsApp,
+            for clients in India and abroad.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center scroll-animate fade-up stagger-3">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary px-10 py-4 text-base"
+            >
+              Book a Consultation
+            </a>
+            <a href="tel:+917042385243" className="btn-ghost px-10 py-4 text-base">
+              +91 70423 85243
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------- */}
+      {/* Footer                                                      */}
+      {/* ---------------------------------------------------------- */}
+      <footer className="border-t hairline-soft px-5 sm:px-8 pt-16 pb-10">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-10 lg:mb-12">
-            {/* Brand */}
-            <div className="sm:col-span-2 lg:col-span-2 text-center sm:text-left">
-              <h3 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6" style={{color: 'var(--on-primary)'}}>
-                Dr. Mukta Tyagi
-              </h3>
-              <p className="font-normal leading-relaxed text-base max-w-sm mx-auto sm:mx-0" style={{color: 'var(--secondary-light)'}}>
-                Professional Vedic Astrologer with over 25 years of experience 
-                helping individuals navigate life&apos;s journey with clarity and purpose.
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-14">
+            <div className="sm:col-span-2 text-center sm:text-left">
+              <a href="#" className="inline-flex items-baseline gap-0.5 mb-5">
+                <span className="font-display text-2xl tracking-wide text-ink">Astro</span>
+                <span className="font-display text-2xl tracking-wide italic gold-gradient-text">Mukta</span>
+              </a>
+              <p className="text-soft text-sm leading-relaxed max-w-sm mx-auto sm:mx-0">
+                Professional Vedic astrologer with over 25 years of experience,
+                helping individuals navigate life&rsquo;s journey with clarity
+                and purpose.
               </p>
             </div>
-            
-            {/* Contact */}
+
             <div className="text-center sm:text-left">
-              <h4 className="text-sm font-medium mb-4 sm:mb-6 uppercase tracking-wider" style={{color: 'var(--disabled)'}}>Contact</h4>
-              <div className="space-y-2 sm:space-y-3">
-                <div>
-                  <a href="tel:+917042385243" className="text-base transition-colors duration-200" style={{color: 'var(--on-primary)'}} onMouseEnter={(e) => (e.target as HTMLElement).style.color = 'var(--secondary)'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'var(--on-primary)'}>
-                    +91 70423 85243
-                  </a>
-                </div>
-                <div>
-                  <a href="https://wa.me/917042385243" target="_blank" rel="noopener noreferrer" className="text-base transition-colors duration-200" style={{color: 'var(--on-primary)'}} onMouseEnter={(e) => (e.target as HTMLElement).style.color = 'var(--secondary)'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'var(--on-primary)'}>
-                    WhatsApp
-                  </a>
-                </div>
+              <h4 className="text-[0.7rem] uppercase tracking-[0.25em] text-faint mb-5">
+                Contact
+              </h4>
+              <div className="space-y-3">
+                <a
+                  href="tel:+917042385243"
+                  className="block text-sm text-soft hover:text-ink transition-colors duration-300"
+                >
+                  +91 70423 85243
+                </a>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-sm text-soft hover:text-ink transition-colors duration-300"
+                >
+                  WhatsApp
+                </a>
               </div>
             </div>
-            
-            {/* Hours */}
+
             <div className="text-center sm:text-left">
-              <h4 className="text-sm font-medium mb-4 sm:mb-6 uppercase tracking-wider" style={{color: 'var(--disabled)'}}>Hours</h4>
-              <div className="font-normal text-base space-y-1" style={{color: 'var(--secondary-light)'}}>
-                <div>Mon-Sun: 9AM-9PM</div>
+              <h4 className="text-[0.7rem] uppercase tracking-[0.25em] text-faint mb-5">
+                Hours
+              </h4>
+              <div className="space-y-3 text-sm text-soft">
+                <div>Mon–Sun: 9 AM – 9 PM</div>
                 <div>By appointment</div>
               </div>
             </div>
           </div>
-          
-          <div className="border-t pt-6 sm:pt-8 text-center sm:text-left" style={{borderColor: 'var(--primary)'}}>
-            <p className="text-sm font-normal" style={{color: 'var(--disabled)'}}>
-              © 2024 Dr. Mukta Tyagi. All rights reserved.
+
+          <div className="divider-fade mb-8" />
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-faint">
+              © {new Date().getFullYear()} Dr. Mukta Tyagi. All rights reserved.
+            </p>
+            <p className="text-xs text-faint font-display italic">
+              Vedic Wisdom, Modern Insight
             </p>
           </div>
         </div>
