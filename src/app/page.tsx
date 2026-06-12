@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import ProfileImage from '../components/ProfileImage';
+import ThemeToggle from '../components/ThemeToggle';
 import { useEffect, useState } from 'react';
 
 const NAV_LINKS = [
@@ -170,6 +171,7 @@ export default function Home() {
                   {link.label}
                 </a>
               ))}
+              <ThemeToggle />
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
@@ -181,14 +183,7 @@ export default function Home() {
             </div>
 
             <div className="lg:hidden flex items-center gap-2">
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary px-4 py-2 text-sm"
-              >
-                Book Now
-              </a>
+              <ThemeToggle />
               <button
                 type="button"
                 aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -225,6 +220,17 @@ export default function Home() {
                   {link.label}
                 </a>
               ))}
+              <div className="px-5 pt-3 pb-2">
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className="btn-primary w-full px-7 py-3 text-sm"
+                >
+                  Book Consultation
+                </a>
+              </div>
             </div>
           )}
         </div>
@@ -293,20 +299,20 @@ export default function Home() {
                 {/* Ambient glow */}
                 <div
                   className="absolute -inset-10 rounded-full blur-3xl"
-                  style={{ background: 'radial-gradient(closest-side, rgba(122,92,160,0.22), rgba(82,52,120,0.12), transparent)' }}
+                  style={{ background: 'var(--hero-glow)' }}
                 />
 
                 {/* Orbital rings */}
-                <div className="absolute inset-0 rounded-full border" style={{ borderColor: 'rgba(242,236,223,0.12)' }} />
-                <div className="absolute inset-[7%] rounded-full border border-dashed" style={{ borderColor: 'rgba(242,236,223,0.08)' }} />
-                <div className="absolute inset-[14%] rounded-full border" style={{ borderColor: 'rgba(182,170,198,0.1)' }} />
+                <div className="absolute inset-0 rounded-full border" style={{ borderColor: 'var(--ring-1)' }} />
+                <div className="absolute inset-[7%] rounded-full border border-dashed" style={{ borderColor: 'var(--ring-2)' }} />
+                <div className="absolute inset-[14%] rounded-full border" style={{ borderColor: 'var(--ring-3)' }} />
 
                 {/* Portrait */}
                 <div
                   className="absolute inset-12 sm:inset-16 rounded-full overflow-hidden"
                   style={{
-                    background: 'radial-gradient(circle at 50% 30%, #3a2752 0%, #1d1430 55%, #120c1e 100%)',
-                    boxShadow: 'inset 0 0 0 1px rgba(242,236,223,0.22), 0 30px 70px -20px rgba(0,0,0,0.7)',
+                    background: 'var(--portrait-bg)',
+                    boxShadow: 'var(--portrait-shadow)',
                   }}
                 >
                   <Image
@@ -410,7 +416,7 @@ export default function Home() {
       {/* ---------------------------------------------------------- */}
       {/* Services                                                    */}
       {/* ---------------------------------------------------------- */}
-      <section id="services" className="px-5 sm:px-8 py-24 sm:py-32 scroll-mt-20" style={{ backgroundColor: 'rgba(255,255,255,0.015)' }}>
+      <section id="services" className="px-5 sm:px-8 py-24 sm:py-32 scroll-mt-20" style={{ backgroundColor: 'var(--section-tint)' }}>
         <div className="max-w-7xl mx-auto">
           <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left mb-16 scroll-animate fade-up">
             <p className="eyebrow mb-5">( 02 ) · Offerings</p>
@@ -508,7 +514,7 @@ export default function Home() {
       <section className="relative px-5 sm:px-8 py-28 sm:py-36 overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 60% 70% at 50% 100%, rgba(122,92,160,0.16), transparent 70%)' }}
+          style={{ background: 'var(--cta-glow)' }}
         />
         <div className="max-w-3xl mx-auto text-center relative">
           <p className="eyebrow mb-6 scroll-animate fade-up">Begin Your Journey</p>

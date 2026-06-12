@@ -21,6 +21,58 @@
 
   --hairline: rgba(242, 236, 223, 0.18);
   --hairline-soft: rgba(255, 255, 255, 0.08);
+
+  /* Theme-dependent surfaces & ornaments */
+  --body-gradient:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(82, 52, 120, 0.28), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(64, 40, 96, 0.22), transparent 70%);
+  --selection-bg: #e6dfd0;
+  --selection-ink: #181024;
+  --hero-glow: radial-gradient(closest-side, rgba(122, 92, 160, 0.22), rgba(82, 52, 120, 0.12), transparent);
+  --ring-1: rgba(242, 236, 223, 0.12);
+  --ring-2: rgba(242, 236, 223, 0.08);
+  --ring-3: rgba(182, 170, 198, 0.1);
+  --portrait-bg: radial-gradient(circle at 50% 30%, #3a2752 0%, #1d1430 55%, #120c1e 100%);
+  --portrait-shadow: inset 0 0 0 1px rgba(242, 236, 223, 0.22), 0 30px 70px -20px rgba(0, 0, 0, 0.7);
+  --section-tint: rgba(255, 255, 255, 0.015);
+  --cta-glow: radial-gradient(ellipse 60% 70% at 50% 100%, rgba(122, 92, 160, 0.16), transparent 70%);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Light theme: "Dawn & Gold"                                         */
+/* ------------------------------------------------------------------ */
+
+[data-theme="light"] {
+  --bg: #faf9f6;
+  --bg-2: #f4f2ed;
+  --bg-3: #ebe8e0;
+
+  --ink: #2e2440;        /* deep plum ink, primary text        */
+  --soft: #5d5468;       /* muted plum-grey, body text         */
+  --faint: #8d8494;      /* captions and metadata              */
+
+  --gold: #a87f2f;       /* deeper gold for light contrast     */
+  --gold-bright: #c49a45;
+  --gold-deep: #7c5c1e;
+
+  --plum: #d9cfe8;
+
+  --hairline: rgba(46, 36, 64, 0.22);
+  --hairline-soft: rgba(46, 36, 64, 0.1);
+
+  --body-gradient:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(166, 138, 205, 0.18), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(210, 168, 94, 0.08), transparent 70%);
+  --selection-bg: #2e2440;
+  --selection-ink: #faf9f6;
+  --hero-glow: radial-gradient(closest-side, rgba(166, 138, 205, 0.3), rgba(210, 168, 94, 0.14), transparent);
+  --ring-1: rgba(46, 36, 64, 0.18);
+  --ring-2: rgba(46, 36, 64, 0.1);
+  --ring-3: rgba(124, 92, 160, 0.16);
+  --portrait-bg: radial-gradient(circle at 50% 30%, #f0ece2 0%, #e3ddd0 55%, #d5cebf 100%);
+  --portrait-shadow: inset 0 0 0 1px rgba(46, 36, 64, 0.18), 0 30px 70px -20px rgba(46, 36, 64, 0.35);
+  --section-tint: rgba(46, 36, 64, 0.035);
+  --cta-glow: radial-gradient(ellipse 60% 70% at 50% 100%, rgba(166, 138, 205, 0.22), transparent 70%);
 }
 
 /* ------------------------------------------------------------------ */
@@ -33,10 +85,9 @@ html {
 
 body {
   background-color: var(--bg);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(82, 52, 120, 0.28), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(64, 40, 96, 0.22), transparent 70%);
+  background-image: var(--body-gradient);
   background-attachment: fixed;
+  transition: background-color 0.4s ease, color 0.4s ease;
   min-height: 100vh;
   color: var(--ink);
   font-family: var(--font-inter), system-ui, sans-serif;
@@ -64,6 +115,17 @@ body::before {
   animation: twinkle 5s infinite alternate ease-in-out;
 }
 
+/* Daylight star field: faint gold & plum specks instead of white stars */
+[data-theme="light"] body::before {
+  background-image:
+    radial-gradient(1px 1px at 25px 35px, rgba(124, 92, 30, 0.4), transparent),
+    radial-gradient(1px 1px at 120px 90px, rgba(46, 36, 64, 0.28), transparent),
+    radial-gradient(1.5px 1.5px at 190px 40px, rgba(168, 127, 47, 0.32), transparent),
+    radial-gradient(1px 1px at 70px 150px, rgba(124, 92, 160, 0.3), transparent),
+    radial-gradient(1px 1px at 240px 130px, rgba(46, 36, 64, 0.2), transparent),
+    radial-gradient(1.5px 1.5px at 300px 70px, rgba(168, 127, 47, 0.26), transparent);
+}
+
 /* Film grain */
 body::after {
   content: '';
@@ -81,9 +143,14 @@ main, nav, footer, section {
   z-index: 2;
 }
 
+[data-theme="light"] body::after {
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+}
+
 ::selection {
-  background: var(--ink);
-  color: #181024;
+  background: var(--selection-bg);
+  color: var(--selection-ink);
 }
 
 :focus-visible {
@@ -144,6 +211,11 @@ main, nav, footer, section {
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--hairline-soft);
+  transition: background 0.4s ease;
+}
+
+[data-theme="light"] .nav-blur {
+  background: rgba(250, 249, 246, 0.78);
 }
 
 .card {
@@ -174,6 +246,21 @@ main, nav, footer, section {
 
 .card:hover .card-glow {
   opacity: 1;
+}
+
+[data-theme="light"] .card {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.38) 100%);
+}
+
+[data-theme="light"] .card:hover {
+  box-shadow:
+    0 24px 48px -20px rgba(46, 36, 64, 0.22),
+    0 0 0 1px rgba(46, 36, 64, 0.04),
+    0 0 60px -24px rgba(166, 138, 205, 0.4);
+}
+
+[data-theme="light"] .card-glow {
+  background: radial-gradient(420px circle at 30% 0%, rgba(124, 92, 160, 0.07), transparent 60%);
 }
 
 /* ------------------------------------------------------------------ */
@@ -228,6 +315,22 @@ main, nav, footer, section {
   transform: translateY(0);
 }
 
+/* Light mode inverts the primary button: deep plum on cream */
+[data-theme="light"] .btn-primary {
+  background: linear-gradient(165deg, #3a2b52 0%, #251a38 100%);
+  color: #f3ecdb;
+  box-shadow:
+    0 2px 12px rgba(46, 36, 64, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+[data-theme="light"] .btn-primary:hover {
+  box-shadow:
+    0 10px 30px rgba(46, 36, 64, 0.32),
+    0 0 24px rgba(58, 43, 82, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -251,6 +354,11 @@ main, nav, footer, section {
 
 .btn-ghost:active {
   transform: translateY(0);
+}
+
+[data-theme="light"] .btn-ghost:hover {
+  border-color: rgba(46, 36, 64, 0.45);
+  background: rgba(46, 36, 64, 0.05);
 }
 
 /* ------------------------------------------------------------------ */
@@ -476,6 +584,35 @@ main, nav, footer, section {
   background: var(--faint);
 }
 
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c2b3d8, var(--plum));
+  border-color: var(--bg);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Theme toggle                                                       */
+/* ------------------------------------------------------------------ */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--hairline-soft);
+  color: var(--soft);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--gold);
+  border-color: var(--hairline);
+  transform: rotate(15deg);
+}
+
 /* ------------------------------------------------------------------ */
 /*  Accessibility & mobile                                             */
 /* ------------------------------------------------------------------ */
@@ -483,6 +620,12 @@ main, nav, footer, section {
 @media (max-width: 640px) {
   button, a {
     min-height: 44px;
+  }
+
+  /* Keep the theme toggle circular at the 44px touch-target size */
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
   }
 
   h1 {
